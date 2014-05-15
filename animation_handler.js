@@ -22,15 +22,16 @@ var AnimationHandler = (function() {
                 var line_svg = layer.append("svg")
                     .attr("class", "af_map_lines");
 
-                // Draw each marker as a separate SVG element.
+                // Draw each marker as a separate SVG element. no need to define right now
                 lineOverlay.draw = function() {
-                    $('#play_trigger').click(function() {
-                        var st_date = 120104;
-                        var ed_date = 120118;
-                        var interval = 2000;
-                        AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
-                    })
                 }
+
+                $('#play_trigger').click(function() {
+                    var st_date = 120104;
+                    var ed_date = 120118;
+                    var interval = 2000;
+                    AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
+                })
             }
             // Bind our overlay to the map…
             lineOverlay.setMap(map);
@@ -50,8 +51,11 @@ var AnimationHandler = (function() {
             var input = input;
             var ed_date = ed_date;
             var totalLength = 0;
-            var interval = setInterval(function() {
-                d3.select("path.lines").remove();
+
+            var interval = window.setInterval(repeat_block, time_interval);
+
+            function repeat_block() {
+                console.log("current time: " + currentTime);
                 var tem = {};
                 if (typeof input[currentTime] == "undefined") { // no data for this date
                     console.log("no data for: " + currentTime);
@@ -76,17 +80,17 @@ var AnimationHandler = (function() {
 //                    console.log(tem);
 //                    generate lines
                     var lines = line_svg
-                            .selectAll("path")
-                            .data(tem)
-                            .enter()
-                            .append("path")
-                            .attr("class", "lines")
+                        .selectAll("path")
+                        .data(tem)
+                        .enter()
+                        .append("path")
+                        .attr("class", "lines")
 //                          .attr("d", path)
-                            .attr("d", linkArc)
-                            .attr("stroke", colors)
+                        .attr("d", linkArc)
+                        .attr("stroke", colors)
 //                            .attr("stroke", "red")
-                            .attr("stroke-width", 1)
-                            .attr("fill", "none");
+                        .attr("stroke-width", 1)
+                        .attr("fill", "none");
                     if (typeof lines.node() != "undefined") {
                         totalLength = totalLength > 0 ? totalLength : lines.node().getTotalLength();
                     }
@@ -97,17 +101,18 @@ var AnimationHandler = (function() {
                         .duration(duration)
 //                        .duration(5000)
                         .ease("linear")
-                        .attr("stroke-dashoffset", 0);
+                        .attr("stroke-dashoffset", 0)
+                        .remove();
 
                     // arc function
                 }
 //                })
                 currentTime++;
                 if (currentTime > ed_date) {
-                    clearInterval(interval);
+                    window.clearInterval(interval);
                     console.log("interval cleared");
                 }
-            }, time_interval); // specify speed: 500 = 0.5s
+            }
         },
         auto_play: function() {
 
