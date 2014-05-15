@@ -29,7 +29,7 @@ var AnimationHandler = (function() {
                 $('#play_trigger').click(function() {
                     var st_date = 120104;
                     var ed_date = 120118;
-                    var interval = 2000;
+                    var interval = 5000;
                     AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
                 })
             }
