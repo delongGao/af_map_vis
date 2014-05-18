@@ -29,7 +29,7 @@ var AnimationHandler = (function() {
                 $('#play_trigger').click(function() {
                     var st_date = 120104;
                     var ed_date = 120118;
-                    var interval = 5000;
+                    var interval = 1800;
                     AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
                 })
             }
@@ -70,8 +70,6 @@ var AnimationHandler = (function() {
                     }
 
                     var colors = d3.scale.category10();
-
-                    console.log(duration);
                     var tem = []
                     $.each(input[currentTime], function(index, value) {
                         tem = tem.concat(value);
@@ -85,7 +83,6 @@ var AnimationHandler = (function() {
                         .enter()
                         .append("path")
                         .attr("class", "lines")
-//                          .attr("d", path)
                         .attr("d", linkArc)
                         .attr("stroke", colors)
 //                            .attr("stroke", "red")
@@ -95,16 +92,13 @@ var AnimationHandler = (function() {
                         totalLength = totalLength > 0 ? totalLength : lines.node().getTotalLength();
                     }
 //                    var totalLength = lines.length;
-                    lines.attr("stroke-dasharray", totalLength *3 + " " + totalLength * 5)
-                        .attr("stroke-dashoffset", totalLength*3)
+                    lines.attr("stroke-dasharray", totalLength *2 + " " + totalLength * 2)
+                        .attr("stroke-dashoffset", totalLength*2)
                         .transition()
                         .duration(duration)
-//                        .duration(5000)
                         .ease("linear")
-                        .attr("stroke-dashoffset", 0)
+                        .attr("stroke-dashoffset", -(totalLength * 2))
                         .remove();
-
-                    // arc function
                 }
 //                })
                 currentTime++;

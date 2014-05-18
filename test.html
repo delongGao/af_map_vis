@@ -85,13 +85,16 @@
 
         var totalLength = lines.node().getTotalLength();
 
-    //    lines.attr("stroke-dasharray", totalLength + " " + totalLength)
+//        lines.transition()
+//                .attr("d", "")
+//                .duration(3000)
+//                .ease("linear");
         lines.attr("stroke-dasharray", totalLength *3 + " " + totalLength * 5)
                 .attr("stroke-dashoffset", totalLength*3)
                 .transition()
                 .duration(3000)
                 .ease("linear")
-                .attr("stroke-dashoffset", 0);
+                .attr("stroke-dashoffset", -(5 * totalLength));
 //    }
 
 
