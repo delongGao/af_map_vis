@@ -23,7 +23,9 @@ var DropDown = (function() {
             );
             drop_content.animate({
                 "opacity": 1
-            }, 0);
+            }, 0, function() {
+                $('.cus_drop_down').find("span.arrow").empty().html("<i class='fa fa-angle-double-up'></i>");
+            });
         },
         hide: function() {
             var drop_content = $('.cus_drop_down').find('.dropdown');
@@ -36,16 +38,65 @@ var DropDown = (function() {
             drop_content.css({
                 "opacity": 0
             }, 500);
+            $('.cus_drop_down').find("span.arrow").empty().html("<i class='fa fa-angle-double-down'></i>");
         },
         select: function() {
             var drop_content = $('.cus_drop_down').find('.dropdown');
             var cur_li = drop_content.find("li")
+            DropDown.hide();
             cur_li.click(function() {
-                $('.cus_drop_down').find("span").empty().html($(this).html());
+                $('.cus_drop_down').find("span.title").empty().html($(this).html());
+                drop_content.find("li.selected").removeClass("selected");
+                $(this).addClass("selected");
             })
         }
     }
-}())
+}());
+
+var ProgressBar = (function() {
+
+    return {
+        toggle_prompt: function() {
+            $('#abs_control').mouseenter(function() {
+                $(this).find("#hover_prompt").animate({
+                    opacity: 1,
+                    height: "20px"
+                }, 350)
+            })
+            $('#abs_control').mouseleave(function() {
+                $(this).find("#hover_prompt").animate({
+                    opacity: 0,
+                    height: "10px"
+                }, 350)
+            })
+        },
+        info_show: function() {
+            $('#info_bar').animate({
+                opacity:1,
+                height:"60px"
+            }, 350, function() {
+                $("#hover_prompt").empty().html("<i class='fa fa-angle-double-down'></i>")
+            })
+        },
+        info_hide: function() {
+            $('#info_bar').animate({
+                opacity:0,
+                height:"0px"
+            }, 350, function() {
+                $("#hover_prompt").empty().html("<i class='fa fa-angle-double-up'></i>")
+            })
+        },
+        info_click: function() {
+            $("#hover_prompt").click(function() {
+                if ($('#info_bar').css("opacity") == 0) {
+                    ProgressBar.info_show();
+                } else {
+                    ProgressBar.info_hide();
+                }
+            })
+        }
+    }
+}());
 
 
 $(function() {
@@ -75,4 +126,7 @@ $(function() {
     // init dropdown
     DropDown.click();
     DropDown.select();
+    // init infobar
+    ProgressBar.toggle_prompt();
+    ProgressBar.info_click();
 });
