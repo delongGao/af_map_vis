@@ -15,20 +15,23 @@
         <script src="animation_handler.js"></script>
         <script src="geo_transform.js"></script>
         <script src="map_styles.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
 
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-        <link href="main.css" rel="stylesheet" />
+        <link href="main.css" rel="stylesheet">
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     </head>
     <body>
         <div id="map"></div>
 
         <div id="intro" class="right_side">
             <h1>Visualizing Migration</h1>
-            <h3> -- Afghanistan, Mobile Call Data</h3>
-            <p>Some random introductions.........Awdawdawdawdawdawdawdawdawdawdawdawdawdaw</p>
-            <p>Gates Foundation</p>
-            <p>University of Washington</p>
-            <p>Information School</p>
+            <h3>Afghanistan Call Detail Records</h3>
+            <p>Bill and Melinda Gates foundation, interested in solving education or welfare related problems in developing
+                countries, is looking for the solutions that could better gauge demography of a country. Lack of any concrete
+                census data from Afghanistan can be substituted by tracking migration patterns of people through Call Detail
+                Records (CDR) from cellular subscribers.</p>
+            <p><b>Gates Foundation | Information School</b></p>
         </div>
 
         <div id="sidebar" class="right_side">
@@ -37,8 +40,23 @@
             <div id="content">
                 <section id="control_section" class="inner_content">
                     <div>
-                        <h3>Please select the month</h3>
-                        <
+                        <div class="cus_drop_down">
+                            <span>Please select month</span>
+                            <ul class="dropdown">
+                                <li>January</li>
+                                <li>February</li>
+                                <li>March</li>
+                                <li>April</li>
+                                <li>May</li>
+                                <li>June</li>
+                                <li>July</li>
+                                <li>August</li>
+                                <li>September</li>
+                                <li>October</li>
+                                <li>November</li>
+                                <li>December</li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
                 <section id="graph_inter_province" class="inner_content">
@@ -50,7 +68,9 @@
         <div id="abs_control">
             <div id="info_bar"></div>
             <div id="progress_bar">
-                <button id="play_trigger">Let's ROCK!!</button>
+                <button id="play_trigger" class="btn btn-primary btn-sm"><i class="fa fa-play"></i></button>
+                <button id="pause_trigger" class="btn btn-primary btn-sm"><i class="fa fa-pause"></i></button>
+                <button id="stop_trigger" class="btn btn-warning btn-sm"><i class="fa fa-stop"></i></button>
             </div>
         </div>
 

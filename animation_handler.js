@@ -3,10 +3,12 @@ var AnimationHandler = (function() {
 
     return {
         init: function(map_obj) {
-            var url = "data.json";
+            var url = "data_new.json";
+            var url_more = "data_more.json";
 //            console.log(map_obj);
 //            $.getJSON(url, function(data) {
-            d3.json(url, function(data) {
+            d3.json(url_more, function(data) {
+//            d3.json(url, function(data) {
 //                console.log(AnimationHandler.obj_to_hash(data));
 //                var input = AnimationHandler.obj_to_hash(data);
                 AnimationHandler.draw(data, map_obj);
@@ -28,8 +30,8 @@ var AnimationHandler = (function() {
 
                 $('#play_trigger').click(function() {
                     var st_date = 120104;
-                    var ed_date = 120118;
-                    var interval = 1800;
+                    var ed_date = 120114;
+                    var interval = 1900;
                     AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
                 })
             }

@@ -81,15 +81,20 @@ d3.json("af_map.json", function(data) {
                 $("#title").html("").text(d.properties.Prov34Na);
                 // slide the map to left
                 if ($("#sidebar").css("display") == "none") {
+                    map.panTo(new google.maps.LatLng(result[0], result[1] + 2));
+                    setTimeout(function() {
+                        map.setZoom(8);
+                    }, 600)
                     setTimeout(function() {
                         $("#intro").hide('slide', { direction: 'right' }, 1000, function() {
-                            $("#sidebar").show('slide', { direction: 'left' }, 1000);
+                            $("#sidebar").show('slide', { direction: 'left' }, 1000, function() {
+                                $('#abs_control').show('slide', {direction: "up"}, 1000);
+                            });
                         });
-                        map.panTo(new google.maps.LatLng(result[0], result[1] + 2));
-                        map.setZoom(8);
-                    }, 500)
+                    }, 2100)
                 } else {
                     map.panTo(new google.maps.LatLng(result[0], result[1] + 2));
+                    DropDown.hide();
                 }
             }
         }
