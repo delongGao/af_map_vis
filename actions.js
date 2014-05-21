@@ -1,4 +1,8 @@
 // UI elements
+// === constants for playbar
+var INTER_PIX = 4;
+var INTER_TIME = 70;
+
 var DropDown = (function() {
 
     return {
@@ -98,6 +102,91 @@ var ProgressBar = (function() {
     }
 }());
 
+var PlayBar = (function() {
+    var cur_interval = null;
+
+    return {
+        init: function() {
+            PlayBar.move_pointer(0);
+            $('#play_trigger, #repeat_trigger').click(function() {
+                PlayBar.auto_play();
+            })
+        },
+        auto_play: function() {
+            var bar_length = parseInt($('#progress_bar #line').css("width"));
+            var pointer_width = parseInt($('#progress_bar #pointer').css("width"));
+            var cur_loc = parseInt(PlayBar.get_pnt_loc());
+
+            console.log("clicked");
+            // hide autoplay button
+            $('#play_trigger').css("display","none");
+            $('#repeat_trigger').css("display","none");
+            $('#pause_trigger').css("display","inline");
+            cur_interval = setInterval(
+                function() {
+                    PlayBar.move_pointer((cur_loc + INTER_PIX) + "px");
+                    cur_loc += INTER_PIX;
+                    if ((cur_loc + pointer_width / 2) > bar_length) {
+                        clearInterval(cur_interval);
+                        PlayBar.move_pointer(0);
+                        $('#repeat_trigger').css("display","inline");
+                        $('#pause_trigger').css("display","none");
+                    }
+                },INTER_TIME
+            );
+
+        },
+        stop: function() {
+            if (cur_interval) {
+                clearInterval(cur_interval);
+            }
+            PlayBar.move_pointer(0);
+            $('#play_trigger').css("display","inline");
+            $('#pause_trigger').css("display","none");
+        },
+        pause: function() {
+            if (cur_interval) {
+                clearInterval(cur_interval);
+            }
+            $('#play_trigger').css("display","inline");
+            $('#pause_trigger').css("display","none");
+        },
+        move_pointer: function(loc) {
+            $('#progress_bar #pointer').animate({
+                left:loc
+            },50)
+        },
+        get_pnt_loc: function() {
+            return $('#progress_bar #pointer').css("left");
+        }
+    }
+}());
+
+var MidPane = (function() {
+
+    return {
+        collapse: function() {
+//            $('#mid_pane').animate({});
+            $('#mid_pane').animate({
+                left:"54%",
+                width:"30px"
+            }, function() {
+                $('#mid_pane #expend').css("display","inline");
+                $('#intro').css("z-index",-1);
+            })
+
+        },
+        expend: function() {
+            $('#mid_pane #expend').css("display","none");
+            $('#intro').css("z-index",1);
+//            $('#mid_pane').animate({});
+            $('#mid_pane').animate({
+                left:"45%",
+                width:"20%"
+            })
+        }
+    }
+}());
 
 $(function() {
     // resume sidebar
@@ -112,7 +201,7 @@ $(function() {
 //                    width: 0
 //                }, 1000
 //            )
-            $("#map").animate(
+            $("#map_main").animate(
                 {
                     opacity: 1
                 }, 1000
@@ -129,4 +218,19 @@ $(function() {
     // init infobar
     ProgressBar.toggle_prompt();
     ProgressBar.info_click();
+    // init playbar
+    PlayBar.init();
+    $('#stop_trigger').click(function() {
+        PlayBar.stop();
+    })
+    $('#pause_trigger').click(function() {
+        PlayBar.pause();
+    })
+    // init pane action
+    $('#left_pane').click(function() {
+        MidPane.collapse();
+    })
+    $('#mid_pane #expend').click(function() {
+        MidPane.expend();
+    })
 });

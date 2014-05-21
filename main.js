@@ -7,13 +7,13 @@ var styledMap = new google.maps.StyledMapType(cool_grey,
 // to the map type control.
 var mapOptions = {
     zoom: 6,
-    center: new google.maps.LatLng(34.5333, 69.1667),
+    center: new google.maps.LatLng(34.5333 - 0.6, 69.1667 - 1.4),
     mapTypeControlOptions: {
         mapTypeIds: [google.maps.MapTypeId.SATELLITE, 'map_style']
     }
 };
 // Create the Google Map…
-var map = new google.maps.Map(d3.select("#map").node(), mapOptions);
+var map = new google.maps.Map(d3.select("#map_main").node(), mapOptions);
 
 //Associate the styled map with the MapTypeId and set it to display.
 map.mapTypes.set('map_style', styledMap);
@@ -93,7 +93,7 @@ d3.json("af_map.json", function(data) {
                         });
                     }, 2100)
                 } else {
-                    map.panTo(new google.maps.LatLng(result[0], result[1] + 2));
+                    map.panTo(new google.maps.LatLng(result[0], result[1]));
                     DropDown.hide();
                 }
             }

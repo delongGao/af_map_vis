@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.core.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.slide.js"></script>
+    <!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.29.1"></script>-->
+    <style type="text/css">
+
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #progress_bar {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 50px;
+            background-color: rgba(77, 73, 73, 0.7);
+            z-index: 120;
+        }
+        #progress_bar #line {
+            height: 5px;
+            width: 99%;
+            background-color: #ffffff;
+            margin: 10px 10px;
+            position: relative;
+        }
+        #progress_bar #pointer {
+            position: absolute;
+            left: 0;
+            top: -3px;
+            display: inline-block;
+            width: 6px;
+            height: 12px;
+            background-color: #000000;
+        }
+        #pause_trigger, #repeat_trigger {
+            display: none;
+        }
+
+        /* layout styles */
+        #container {
+            width: 100%;
+            height: 99.39%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .pane {
+            display: inline-block;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+        }
+        .map_pane {
+            width: 100%;
+        }
+        #map_1 {
+            height: 55%;
+        }
+        #map_2 {
+            height: 40%;
+        }
+        #left_pane {
+            left: 0px;
+            width: 55%;
+            background-color: #808080;
+        }
+        #mid_pane {
+            left: 45%;
+            width: 20%;
+            background-color: rgba(28, 126, 164, 0.6);
+            z-index: 100;
+            text-align: center;
+        }
+        #right_pane {
+            right: 0px;
+            width: 45%;
+            background-color: #808080;
+        }
+
+        #mid_pane #expend {
+            background-color: #ffffff;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!--<div id="map"></div>-->
+<div id="container">
+    <div id="left_pane" class="pane">
+        <div id="map_1" class="map_pane"></div>
+        <div id="map_2" class="map_pane"></div>
+    </div>
+    <div id="mid_pane" class="pane">
+        <div id="expend">
+            <i class="fa fa-angle-double-left"></i> <i class="fa fa-angle-double-right"></i>
+        </div>
+    </div>
+    <div id="right_pane" class="pane">
+        <div id="tb_1"></div>
+        <div id="tb_2"></div>
+        <div id="tb_3"></div>
+    </div>
+</div>
+
+
+<div id="progress_bar">
+    <div id="line">
+        <span id="pointer"></span>
+    </div>
+    <button id="repeat_trigger" class="btn btn-warning btn-sm"><i class="fa fa-repeat"></i></button>
+    <button id="play_trigger" class="btn btn-primary btn-sm"><i class="fa fa-play"></i></button>
+    <button id="pause_trigger" class="btn btn-primary btn-sm"><i class="fa fa-pause"></i></button>
+    <button id="stop_trigger" class="btn btn-warning btn-sm"><i class="fa fa-stop"></i></button>
+</div>
+
+<script>
+    var MidPane = (function() {
+
+        return {
+            collapse: function() {
+                $('#mid_pane').animate({left:"53%"});
+                $('#mid_pane').animate({
+                    width:"30px"
+                }, function() {
+                    $('#mid_pane #expend').css("display","inline");
+                })
+
+            },
+            expend: function() {
+                $('#mid_pane #expend').css("display","none");
+                $('#mid_pane').animate({left:"45%"});
+                $('#mid_pane').animate({
+                    width:"20%"
+                })
+            }
+        }
+    }());
+
+    $(function() {
+        $('#left_pane').click(function() {
+            MidPane.collapse();
+        })
+        $('#mid_pane #expend').click(function() {
+            MidPane.expend();
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    var INTER_PIX = 4;
+    var INTER_TIME = 70;
+
+    var PlayBar = (function() {
+        var cur_interval = null;
+
+        return {
+            init: function() {
+                PlayBar.move_pointer(0);
+                $('#play_trigger, #repeat_trigger').click(function() {
+                    PlayBar.auto_play();
+                })
+            },
+            auto_play: function() {
+                var bar_length = parseInt($('#progress_bar #line').css("width"));
+                var pointer_width = parseInt($('#progress_bar #pointer').css("width"));
+                var cur_loc = parseInt(PlayBar.get_pnt_loc());
+
+                console.log("clicked");
+                // hide autoplay button
+                $('#play_trigger').css("display","none");
+                $('#repeat_trigger').css("display","none");
+                $('#pause_trigger').css("display","inline");
+                cur_interval = setInterval(
+                        function() {
+                            PlayBar.move_pointer((cur_loc + INTER_PIX) + "px");
+                            cur_loc += INTER_PIX;
+                            if ((cur_loc + pointer_width / 2) > bar_length) {
+                                clearInterval(cur_interval);
+                                var last_left = parseInt(PlayBar.get_pnt_loc());
+                                PlayBar.move_pointer(0);
+                                $('#repeat_trigger').css("display","inline");
+                                $('#pause_trigger').css("display","none");
+                            }
+                        },INTER_TIME
+                );
+
+            },
+            stop: function() {
+                if (cur_interval) {
+                    clearInterval(cur_interval);
+                }
+                PlayBar.move_pointer(0);
+                $('#play_trigger').css("display","inline");
+                $('#pause_trigger').css("display","none");
+            },
+            pause: function() {
+                if (cur_interval) {
+                    clearInterval(cur_interval);
+                }
+                $('#play_trigger').css("display","inline");
+                $('#pause_trigger').css("display","none");
+            },
+            move_pointer: function(loc) {
+                $('#progress_bar #pointer').animate({
+                    left:loc
+                },50)
+            },
+            get_pnt_loc: function() {
+                return $('#progress_bar #pointer').css("left");
+            }
+        }
+    }());
+
+    $(function() {
+        PlayBar.init();
+        $('#stop_trigger').click(function() {
+            PlayBar.stop();
+        })
+        $('#pause_trigger').click(function() {
+            PlayBar.pause();
+        })
+    })
+</script>
+
+<!--<script type="text/javascript">-->
+    <!--var data = [-->
+        <!--[[100,200],[200,300]],-->
+        <!--[[500,400],[300,700]],-->
+        <!--[[900,400],[300,600]],-->
+        <!--[[1200,500],[300,1000]],-->
+        <!--[[1200,500],[500,1000]]-->
+    <!--];-->
+
+    <!--var data_int = data.map(function(item) { return item[0] });-->
+
+    <!--//    for (var i = 0; i < 2; i++) {-->
+    <!--var container = d3.select("#map")-->
+            <!--.append("svg")-->
+            <!--.attr("length", 2000)-->
+            <!--.attr("width", 2000)-->
+            <!--.attr("class", "line_container");-->
+
+    <!--function linkArc(d) {-->
+        <!--var dx = d[1][0] - d[0][0],-->
+                <!--dy = d[1][1] - d[0][1],-->
+                <!--dr = Math.sqrt(dx * dx + dy * dy);-->
+        <!--return "M" + d[0][0] + "," + d[0][1] + "A" + dr + "," + dr + " 0 0,1 " + d[1][0] + "," + d[1][1];-->
+    <!--}-->
+
+    <!--var lineFunction = d3.svg.line()-->
+            <!--.x(function(d) { return d[0]; })-->
+            <!--.y(function(d) { return d[1]; })-->
+        <!--//                         .interpolate("monotone");-->
+            <!--.interpolate("cardinal");-->
+
+    <!--var lines = container-->
+            <!--.selectAll("path")-->
+            <!--.data(data)-->
+            <!--.enter()-->
+            <!--.append("path")-->
+            <!--.attr("d", linkArc)-->
+        <!--//                         .attr("d", lineFunction)-->
+            <!--.attr("stroke", "blue")-->
+            <!--.attr("stroke-width", 2)-->
+            <!--.attr("fill", "none");-->
+
+    <!--var totalLength = lines.node().getTotalLength();-->
+
+    <!--//        lines.transition()-->
+    <!--//                .attr("d", "")-->
+    <!--//                .duration(3000)-->
+    <!--//                .ease("linear");-->
+    <!--lines.attr("stroke-dasharray", totalLength *3 + " " + totalLength * 5)-->
+            <!--.attr("stroke-dashoffset", totalLength*3)-->
+            <!--.transition()-->
+            <!--.duration(3000)-->
+            <!--.ease("linear")-->
+            <!--.attr("stroke-dashoffset", -(5 * totalLength));-->
+    <!--//    }-->
+
+
+    <!--function insertMid() {-->
+        <!--$.each(data, function(key, value) {-->
+            <!--value.splice(1,0,[(value[0][0] + value[1][0] + 200) / 2, (value[0][1] + value[1][1] + 200) / 2])-->
+        <!--})-->
+    <!--}-->
+
+
+
+
+    <!--//    // Create the Google Map…-->
+    <!--//    var map = new google.maps.Map(d3.select("#map").node(), {-->
+    <!--//        zoom: 8,-->
+    <!--//        center: new google.maps.LatLng(37.76487, -122.41948),-->
+    <!--//        mapTypeId: google.maps.MapTypeId.TERRAIN-->
+    <!--//    });-->
+    <!--//-->
+    <!--//    // Load the station data. When the data comes back, create an overlay.-->
+    <!--//    d3.json("af_map.json", function(collection) {-->
+    <!--//        var overlay = new google.maps.OverlayView();-->
+    <!--//-->
+    <!--//        // Add the container when the overlay is added to the map.-->
+    <!--//        overlay.onAdd = function() {-->
+    <!--//            var layer = d3.select(this.getPanes().overlayLayer).append("svg")-->
+    <!--//                    .attr("class", "stations");-->
+    <!--//            var g = layer.append("g");-->
+    <!--//-->
+    <!--//            // Draw each marker as a separate SVG element.-->
+    <!--//            // We could use a single SVG, but what size would it have?-->
+    <!--//            overlay.draw = function() {-->
+    <!--//                var projection = this.getProjection();-->
+    <!--//-->
+    <!--//                function transform(x,y) {-->
+    <!--//                    var point = new google.maps.LatLng(y, x);-->
+    <!--//                    var tem_point = projection.fromLatLngToDivPixel(point);-->
+    <!--//                    this.stream.point(tem_point.x, tem_point.y);-->
+    <!--////                    return d3.select(this)-->
+    <!--////                            .style("left", (d.x - padding) + "px")-->
+    <!--////                            .style("top", (d.y - padding) + "px");-->
+    <!--//                }-->
+    <!--//-->
+    <!--//                var geo_transform = d3.geo.transform({point: transform}),-->
+    <!--//                        path = d3.geo.path().projection(geo_transform);-->
+    <!--//-->
+    <!--//                var feature = g.selectAll("path")-->
+    <!--//                        .data(collection.features)-->
+    <!--//                        .enter().append("path");-->
+    <!--//-->
+    <!--//                feature[0].attr("d", path);-->
+    <!--//-->
+    <!--////                var projection = this.getProjection(),-->
+    <!--////                        padding = 10;-->
+    <!--////-->
+    <!--////                var marker = layer.selectAll("svg")-->
+    <!--////                        .data(d3.entries(data))-->
+    <!--////                        .each(transform) // update existing markers-->
+    <!--////                        .enter().append("svg:svg")-->
+    <!--////                        .each(transform)-->
+    <!--////                        .attr("class", "marker");-->
+    <!--////-->
+    <!--////                // Add a circle.-->
+    <!--////                marker.append("svg:circle")-->
+    <!--////                        .attr("r", 4.5)-->
+    <!--////                        .attr("cx", padding)-->
+    <!--////                        .attr("cy", padding);-->
+    <!--////-->
+    <!--////                // Add a label.-->
+    <!--////                marker.append("svg:text")-->
+    <!--////                        .attr("x", padding + 7)-->
+    <!--////                        .attr("y", padding)-->
+    <!--////                        .attr("dy", ".31em")-->
+    <!--////                        .text(function(d) { return d.key; });-->
+    <!--////-->
+    <!--////                function transform(d) {-->
+    <!--////                    d = new google.maps.LatLng(d.value[1], d.value[0]);-->
+    <!--////                    d = projection.fromLatLngToDivPixel(d);-->
+    <!--////                    return d3.select(this)-->
+    <!--////                            .style("left", (d.x - padding) + "px")-->
+    <!--////                            .style("top", (d.y - padding) + "px");-->
+    <!--////                }-->
+    <!--//            };-->
+    <!--//        };-->
+    <!--//-->
+    <!--//        // Bind our overlay to the map…-->
+    <!--//        overlay.setMap(map);-->
+    <!--//    });-->
+
+<!--</script>-->
+</body>
+</html>
