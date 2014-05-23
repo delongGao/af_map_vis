@@ -5,9 +5,12 @@ var AnimationHandler = (function() {
         init: function(map_obj) {
             var url = "data_new.json";
             var url_more = "data_more.json";
+            var url_remote = "http://128.95.157.71/py/hello.py";
 //            console.log(map_obj);
 //            $.getJSON(url, function(data) {
             d3.json(url_more, function(data) {
+//            d3.json(url_remote, function(data) {
+//                data = JSON.parse(data);
 //            d3.json(url, function(data) {
 //                console.log(AnimationHandler.obj_to_hash(data));
 //                var input = AnimationHandler.obj_to_hash(data);

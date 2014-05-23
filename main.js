@@ -1,7 +1,7 @@
 // Create a new StyledMapType object, passing it the array of styles,
 // as well as the name to be displayed on the map type control. Styles passed from map_styles.js
 
-var styledMap = new google.maps.StyledMapType(cool_grey,
+var styledMapMain = new google.maps.StyledMapType(cobalt,
     {name: "Styled Map"});
 // Create a map object, and include the MapTypeId to add
 // to the map type control.
@@ -16,8 +16,11 @@ var mapOptions = {
 var map = new google.maps.Map(d3.select("#map_main").node(), mapOptions);
 
 //Associate the styled map with the MapTypeId and set it to display.
-map.mapTypes.set('map_style', styledMap);
+map.mapTypes.set('map_style', styledMapMain);
 map.setMapTypeId('map_style');
+
+// placeholder for map_sub
+var map_sub = null;
 
 // create d3 tooltip
 var tip = d3.tip()
@@ -29,7 +32,6 @@ var tip = d3.tip()
 
 // Load the station data. When the data comes back, create an overlay.
 d3.json("af_map.json", function(data) {
-//            d3.json("af_map_zipped.json", function(data) {
     var overlay = new google.maps.OverlayView();
     // Add the container when the overlay is added to the map.
     overlay.onAdd = function() {
@@ -42,19 +44,6 @@ d3.json("af_map.json", function(data) {
         overlay.draw = function() {
             // initiate d3 tooltip
             map_container.call(tip);
-
-//                        var projection = this.getProjection();
-//
-//                        function projectPoint(x, y) {
-////                            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-//                            var point = new google.maps.LatLng(y, x);
-//                            point = projection.fromLatLngToDivPixel(point);
-//                            this.stream.point(point.x + 4000, point.y + 4000);
-////                            this.stream.point(point.x + 4000, point.y);
-//                        }
-//
-//                        var transform = d3.geo.transform({point: projectPoint}),
-//                                path = d3.geo.path().projection(transform);
             var path = GeoTransform.convert(this);
 
             map_container.selectAll("path")
@@ -77,31 +66,76 @@ d3.json("af_map.json", function(data) {
                     .attr("class", "");
                 d3.select(this)
                     .attr("class", "selected");
-//                            map.setZoom(7);
-                $("#title").html("").text(d.properties.Prov34Na);
+
+                setTimeout(function() {
+                    // attach sub map
+                    if (!map_sub) {
+                        map_sub = create_sub_map();
+                    }
+
+                    map_sub.panTo(new google.maps.LatLng(result[0], result[1]));
+                    map_sub.setZoom(7);
+
+                    // high-light sub-map
+                    var cur_province = d.properties.Prov34Na
+                    d3.select(".af_map_sub path.selected").attr("class","");
+                    d3.select("#map_sub_" + cur_province).attr("class","selected");
+                    $("#title").html("").text(cur_province);
+                    LeftPane.hover();
+                }, 300)
+
                 // slide the map to left
-                if ($("#sidebar").css("display") == "none") {
-                    map.panTo(new google.maps.LatLng(result[0], result[1] + 2));
-                    setTimeout(function() {
-                        map.setZoom(8);
-                    }, 600)
-                    setTimeout(function() {
-                        $("#intro").hide('slide', { direction: 'right' }, 1000, function() {
-                            $("#sidebar").show('slide', { direction: 'left' }, 1000, function() {
-                                $('#abs_control').show('slide', {direction: "up"}, 1000);
-                            });
-                        });
-                    }, 2100)
-                } else {
-                    map.panTo(new google.maps.LatLng(result[0], result[1]));
-                    DropDown.hide();
+                map.panTo(new google.maps.LatLng(result[0], result[1]));
+            }
+
+            // create sub map
+            function create_sub_map() {
+                var styledMapSub = new google.maps.StyledMapType(just_places,
+                    {name: "Styled Sub Map"});
+                var mapSubOptions = {
+                    zoom: 6,
+                    center: new google.maps.LatLng(34.5333 - 0.6, 69.1667 - 1.4),
+                    mapTypeControlOptions: {
+                        mapTypeIds: [google.maps.MapTypeId.SATELLITE, 'map_sub_style']
+                    }
+                };
+                var map_sub = new google.maps.Map(d3.select("#map_sub").node(), mapSubOptions);
+                // sub map
+                map_sub.mapTypes.set('map_sub_style', styledMapSub);
+                map_sub.setMapTypeId('map_sub_style');
+
+                // create provinces
+                var overlay_sub = new google.maps.OverlayView();
+                overlay_sub.onAdd = function() {
+                    var layer_sub = d3.select(this.getPanes().overlayMouseTarget).attr("class", "layer_sub");
+                    var map_sub_container = layer_sub.append("svg")
+                        .attr("class", "af_map_sub");
+                    // Draw each marker as a separate SVG element.
+                    overlay_sub.draw = function() {
+                        // initiate d3 tooltip
+                        map_sub_container.call(tip);
+                        var path = GeoTransform.convert(this);
+
+                        map_sub_container.selectAll("path")
+                            .data(data.features)
+                            .attr("d", path)
+                            .enter().append("path")
+                            .attr("d", path)
+                            .attr("id", function(d) { return "map_sub_" + d.properties.Prov34Na.split(" ").join("_") })
+//                                .on("click", clickTrigger)
+                            .on("mouseover", tip.show)
+                            .on("mouseout", tip.hide);
+                    }
                 }
+                overlay_sub.setMap(map_sub);
+                return map_sub;
             }
         }
     }
 
     // Bind our overlay to the map…
     overlay.setMap(map);
+//    overlay.setMap(map_sub);
 })
 
 AnimationHandler.init(map);

@@ -17,14 +17,19 @@ html, body, #map_main {
 #map_main {
     left: 0;
     width: 100%;
-    height: 60%;
+    height: 65%;
+}
+#map_sub {
+    left: 0;
+    width: 100%;
+    height: 101%;
 }
 
 /* potiential fix to weird position */
 .layer {
     position: relative;
 }
-.af_map, .af_map_lines {
+.af_map, .af_map_lines, .af_map_sub {
     position: absolute;
     top: -4000px;
     left: -4000px;
@@ -33,22 +38,22 @@ html, body, #map_main {
 }
 /* end potiential fix */
 
-.af_map path {
+.af_map path, .af_map_sub path {
     fill: #d9d9d9;
-    opacity: .65;
-    stroke: #999999;
+    opacity: .4;
+    stroke: #666666;
     stroke-width: 1px;
     cursor: pointer;
 }
-.af_map path:hover {
+.af_map path:hover, .af_map_sub path:hover {
     /*fill: #000000;*/
     fill: #891616;
 }
-.af_map path.selected {
+.af_map path.selected, .af_map_sub path.selected {
     fill: #FAFAFA;
     opacity: 0.5;
     stroke: #731212;
-    stroke-width: 5px;
+    stroke-width: 3px;
 }
 
 /* d3 tooltip styles */
@@ -252,15 +257,20 @@ html, body, #map_main {
     width: 100%;
 }
 #map_1 {
-    height: 55%;
+    top: 0;
+    z-index: 10;
+    border-top: 2px solid #000000;
 }
 #map_2 {
-    height: 40%;
+    position: absolute;
+    top: 65%;
+    height: 35%;
 }
 #left_pane {
     left: 0px;
     width: 55%;
     background-color: #808080;
+    position: relative;
 }
 #mid_pane {
     left: 45%;
