@@ -189,40 +189,45 @@ var MidPane = (function() {
 var LeftPane = (function() {
 
     return {
-        hover: function() {
-            $('#map_2').css("z-index", 1);
-            $('.map_pane').mouseenter(function() {
-                $(this).animate({
-                    height: "65%",
-                    zIndex: 3,
-                    opacity: 1
-                })
-            })
-            $('.map_pane').mouseleave(function() {
-                $(this).animate({
-                    height:"35%",
-                    zIndex: 1,
-                    opacity:.7
-                })
-            })
-            // map_2 specific
-            $('#map_2').mouseenter(function() {
-                $(this).animate({
-                    top: "35%",
-                    height: "65%",
-                    zIndex: 3,
-                    opacity: 1
-                })
-            })
-            $('#map_2').mouseleave(function() {
-                $(this).animate({
-                    top: "65%",
-                    height: "35%",
-                    zIndex: 1,
-                    opacity:.7
-                })
+        hover:function() {
+            $('.map_pane').mouseover(function() {
+                $(this).find('.')
             })
         }
+//        hover: function() {
+//            $('#map_2').css("z-index", 1);
+//            $('.map_pane').mouseenter(function() {
+//                $(this).animate({
+//                    height: "65%",
+//                    zIndex: 3,
+//                    opacity: 1
+//                })
+//            })
+//            $('.map_pane').mouseleave(function() {
+//                $(this).animate({
+//                    height:"35%",
+//                    zIndex: 1,
+//                    opacity:.7
+//                })
+//            })
+//            // map_2 specific
+//            $('#map_2').mouseenter(function() {
+//                $(this).animate({
+//                    top: "35%",
+//                    height: "65%",
+//                    zIndex: 3,
+//                    opacity: 1
+//                })
+//            })
+//            $('#map_2').mouseleave(function() {
+//                $(this).animate({
+//                    top: "65%",
+//                    height: "35%",
+//                    zIndex: 1,
+//                    opacity:.7
+//                })
+//            })
+//        }
     }
 }());
 
@@ -273,22 +278,22 @@ $(function() {
         MidPane.expend();
     })
     // init Left pane
-    if ($('.af_map_sub').length > 0) {
-        LeftPane.hover();
-        // map_1 event bundle
-//        $('#map_1').mouseenter(function() {
-//            LeftPane.enlarge($(this));
-//        })
-//        $('#map_1').mouseleave(function() {
-//            LeftPane.ensmall($(this));
-//        })
-//
-//        // map_2 event bundle
-//        $('#map_2').mouseenter(function() {
-//            LeftPane.enlarge($(this));
-//        })
-//        $('#map_2').mouseleave(function() {
-//            LeftPane.ensmall($(this));
-//        })
-    }
+//    if ($('.af_map_sub').length > 0) {
+//        LeftPane.hover();
+//        // map_1 event bundle
+////        $('#map_1').mouseenter(function() {
+////            LeftPane.enlarge($(this));
+////        })
+////        $('#map_1').mouseleave(function() {
+////            LeftPane.ensmall($(this));
+////        })
+////
+////        // map_2 event bundle
+////        $('#map_2').mouseenter(function() {
+////            LeftPane.enlarge($(this));
+////        })
+////        $('#map_2').mouseleave(function() {
+////            LeftPane.ensmall($(this));
+////        })
+//    }
 });

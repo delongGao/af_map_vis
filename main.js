@@ -81,7 +81,6 @@ d3.json("af_map.json", function(data) {
                     d3.select(".af_map_sub path.selected").attr("class","");
                     d3.select("#map_sub_" + cur_province).attr("class","selected");
                     $("#title").html("").text(cur_province);
-                    LeftPane.hover();
                 }, 300)
 
                 // slide the map to left
