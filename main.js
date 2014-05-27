@@ -111,8 +111,6 @@ d3.json("af_map.json", function(data) {
                         .attr("class", "af_map_sub");
                     // Draw each marker as a separate SVG element.
                     overlay_sub.draw = function() {
-                        // initiate d3 tooltip
-                        map_sub_container.call(tip);
                         var path = GeoTransform.convert(this);
 
                         map_sub_container.selectAll("path")
@@ -120,13 +118,14 @@ d3.json("af_map.json", function(data) {
                             .attr("d", path)
                             .enter().append("path")
                             .attr("d", path)
-                            .attr("id", function(d) { return "map_sub_" + d.properties.Prov34Na.split(" ").join("_") })
-//                                .on("click", clickTrigger)
-                            .on("mouseover", tip.show)
-                            .on("mouseout", tip.hide);
+                            .attr("id", function(d) { return "map_sub_" + d.properties.Prov34Na.split(" ").join("_") });
                     }
                 }
                 overlay_sub.setMap(map_sub);
+
+                // init hover click
+                LeftPane.hover();
+                LeftPane.click();
                 return map_sub;
             }
         }

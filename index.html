@@ -26,9 +26,11 @@
             <div id="left_pane" class="pane">
                 <div id="map_1" class="map_pane">
                     <div id="map_main"></div>
-                    <div>
-                        
-                    </div>
+                    <!-- hover wrapper -->
+                    <!--<div class="hover_wrapper">-->
+                        <!--<i class="fa fa-angle-double-up ensmall"></i>-->
+                        <!--<i class="fa fa-angle-double-down enlarge"></i>-->
+                    <!--</div>-->
                 </div>
                 <div id="map_2" class="map_pane">
                     <!-- sub_map -->
@@ -37,17 +39,24 @@
                     </div>
                     <!-- control area -->
                     <div id="abs_control">
-                        <div id="hover_prompt"><i class="fa fa-angle-double-up"></i></div>
-                        <div id="info_bar"></div>
+                        <!--<div id="hover_prompt"><i class="fa fa-angle-double-up"></i></div>-->
+                        <!--<div id="info_bar"></div>-->
                         <div id="progress_bar">
+                            <div class="progress_control">
+                                <div id="repeat_trigger"><i class="fa fa-repeat"></i></div>
+                                <div id="play_trigger"><i class="fa fa-play"></i></div>
+                                <div id="pause_trigger"><i class="fa fa-pause"></i></div>
+                            </div>
+                            <div id="stop_trigger" class="progress_control"><i class="fa fa-stop"></i></div>
                             <div id="line">
                                 <span id="pointer"></span>
                             </div>
-                            <button id="repeat_trigger" class="btn btn-warning btn-sm"><i class="fa fa-repeat"></i></button>
-                            <button id="play_trigger" class="btn btn-primary btn-sm"><i class="fa fa-play"></i></button>
-                            <button id="pause_trigger" class="btn btn-primary btn-sm"><i class="fa fa-pause"></i></button>
-                            <button id="stop_trigger" class="btn btn-warning btn-sm"><i class="fa fa-stop"></i></button>
                         </div>
+                    </div>
+                    <!-- hover wrapper -->
+                    <div class="hover_wrapper">
+                        <i class="fa fa-angle-double-up enlarge"></i>
+                        <i class="fa fa-angle-double-down ensmall"></i>
                     </div>
                 </div>
             </div>

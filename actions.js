@@ -143,6 +143,7 @@ var PlayBar = (function() {
             PlayBar.move_pointer(0);
             $('#play_trigger').css("display","inline");
             $('#pause_trigger').css("display","none");
+            $('#repeat_trigger').css("display","none");
         },
         pause: function() {
             if (cur_interval) {
@@ -170,7 +171,7 @@ var MidPane = (function() {
                 left:"54%",
                 width:"30px"
             }, function() {
-                $('#mid_pane #expend').css("display","inline");
+                $('#mid_pane #expend').css("display","block");
                 $('#intro').css("z-index",-1);
             })
 
@@ -179,8 +180,8 @@ var MidPane = (function() {
             $('#mid_pane #expend').css("display","none");
             $('#intro').css("z-index",1);
             $('#mid_pane').animate({
-                left:"45%",
-                width:"20%"
+                left:"43%",
+                width:"24%"
             })
         }
     }
@@ -191,43 +192,42 @@ var LeftPane = (function() {
     return {
         hover:function() {
             $('.map_pane').mouseover(function() {
-                $(this).find('.')
+                $(this).find('.hover_wrapper').css({
+                    display:"block"
+                });
+                $('#abs_control').css("display","block");
+            })
+            $('.map_pane').mouseout(function() {
+                $(this).find('.hover_wrapper').css({
+                    display:"none"
+                });
+                $('#abs_control').css("display","none");
+            })
+        },
+        click: function() {
+            $('.hover_wrapper').click(function() {
+                var ensmall = $(this).find('.ensmall');
+                var enlarge = $(this).find('.enlarge');
+                // state: small
+                if (ensmall.css("display") == "none") {
+                    ensmall.css("display", "inline");
+                    enlarge.css("display", "none");
+                    $('#map_2').animate({
+                        top:'35%',
+                        height:'65%'
+                    },600);
+                }
+                // state: large
+                else {
+                    ensmall.css("display", "none");
+                    enlarge.css("display", "inline");
+                    $('#map_2').animate({
+                        top:'65%',
+                        height:'35%'
+                    },600);
+                }
             })
         }
-//        hover: function() {
-//            $('#map_2').css("z-index", 1);
-//            $('.map_pane').mouseenter(function() {
-//                $(this).animate({
-//                    height: "65%",
-//                    zIndex: 3,
-//                    opacity: 1
-//                })
-//            })
-//            $('.map_pane').mouseleave(function() {
-//                $(this).animate({
-//                    height:"35%",
-//                    zIndex: 1,
-//                    opacity:.7
-//                })
-//            })
-//            // map_2 specific
-//            $('#map_2').mouseenter(function() {
-//                $(this).animate({
-//                    top: "35%",
-//                    height: "65%",
-//                    zIndex: 3,
-//                    opacity: 1
-//                })
-//            })
-//            $('#map_2').mouseleave(function() {
-//                $(this).animate({
-//                    top: "65%",
-//                    height: "35%",
-//                    zIndex: 1,
-//                    opacity:.7
-//                })
-//            })
-//        }
     }
 }());
 
@@ -277,23 +277,6 @@ $(function() {
     $('#mid_pane #expend').click(function() {
         MidPane.expend();
     })
-    // init Left pane
-//    if ($('.af_map_sub').length > 0) {
-//        LeftPane.hover();
-//        // map_1 event bundle
-////        $('#map_1').mouseenter(function() {
-////            LeftPane.enlarge($(this));
-////        })
-////        $('#map_1').mouseleave(function() {
-////            LeftPane.ensmall($(this));
-////        })
-////
-////        // map_2 event bundle
-////        $('#map_2').mouseenter(function() {
-////            LeftPane.enlarge($(this));
-////        })
-////        $('#map_2').mouseleave(function() {
-////            LeftPane.ensmall($(this));
-////        })
-//    }
+
+
 });
