@@ -270,13 +270,11 @@ $(function() {
     $('#pause_trigger').click(function() {
         PlayBar.pause();
     })
-    // init pane action
-    $('#left_pane').click(function() {
-        MidPane.collapse();
-    })
+    // mid_pane actions
     $('#mid_pane #expend').click(function() {
         MidPane.expend();
     })
-
-
+    $('#mid_pane #collapse img').click(function() {
+        MidPane.collapse();
+    })
 });

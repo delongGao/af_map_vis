@@ -40,14 +40,6 @@ var AnimationHandler = (function() {
             }
             // Bind our overlay to the map…
             lineOverlay.setMap(map);
-//            var line_container = d3.select('.af_map')
-//                    .append("svg")
-//                    .attr("class","line_container");
-//            var path = GeoTransform.convert(line_container);
-//            var lines = line_container.selectAll("path")
-//                    .data(data)
-//                    .attr("d", path)
-//                    .enter()
         },
         update: function(input, st_date, ed_date, layerContainer, time_interval, line_svg) {
             // geo converter

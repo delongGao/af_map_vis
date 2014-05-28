@@ -66,6 +66,8 @@ d3.json("af_map.json", function(data) {
                     .attr("class", "");
                 d3.select(this)
                     .attr("class", "selected");
+                // collapse the mid pane
+                MidPane.collapse();
 
                 setTimeout(function() {
                     // attach sub map
@@ -74,15 +76,16 @@ d3.json("af_map.json", function(data) {
                     }
 
                     map_sub.panTo(new google.maps.LatLng(result[0], result[1]));
-                    map_sub.setZoom(7);
+                    setTimeout(function() {
+                        map_sub.setZoom(7);
+                    },150);
 
                     // high-light sub-map
                     var cur_province = d.properties.Prov34Na
                     d3.select(".af_map_sub path.selected").attr("class","");
                     d3.select("#map_sub_" + cur_province).attr("class","selected");
-                    $("#title").html("").text(cur_province);
-                }, 300)
-
+                    $("#tb_1 h1").html("").text(cur_province);
+                },450);
                 // slide the map to left
                 map.panTo(new google.maps.LatLng(result[0], result[1]));
             }
@@ -126,6 +129,8 @@ d3.json("af_map.json", function(data) {
                 // init hover click
                 LeftPane.hover();
                 LeftPane.click();
+                // test
+                AnimationHandler.init(map_sub);
                 return map_sub;
             }
         }
@@ -135,5 +140,3 @@ d3.json("af_map.json", function(data) {
     overlay.setMap(map);
 //    overlay.setMap(map_sub);
 })
-
-AnimationHandler.init(map);
