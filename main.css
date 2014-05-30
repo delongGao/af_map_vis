@@ -322,7 +322,7 @@ html, body, #map_main {
     text-align: center;
     display: none;
     z-index: 200;
-    line-height: 48;
+    line-height: 33;
     cursor: pointer;
     font-size: 1.2em;
 }
@@ -377,4 +377,7 @@ html, body, #map_main {
 }
 #tb_3 {
     height: 25%;
+}
+.dest_circles {
+    opacity: 0.6;
 }

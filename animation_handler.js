@@ -49,6 +49,7 @@ var AnimationHandler = (function() {
             var ed_date = ed_date;
             var totalLength = 0;
 
+            var dest_hash = {}
             var interval = window.setInterval(repeat_block, time_interval);
 
             function repeat_block() {
@@ -74,6 +75,18 @@ var AnimationHandler = (function() {
                     tem = tem.map(function(item) { return [GeoTransform.convertPoints(item[0],layerContainer),GeoTransform.convertPoints(item[1], layerContainer)] });
 //                    console.log(tem);
 //                    generate lines
+
+                    // build dest_hash
+                    $.each(tem, function(key,item) {
+                        if (typeof dest_hash[item[1].join("_")] == "undefined") {
+                            dest_hash[item[1].join("_")] = {"coords":item[1], "freq":1};
+                        } else {
+                            dest_hash[item[1].join("_")].freq += 1;
+                        }
+                    })
+
+//                    console.log(dest_hash);
+
                     var lines = line_svg
                         .selectAll("path")
                         .data(tem)
@@ -82,9 +95,9 @@ var AnimationHandler = (function() {
                         .attr("class", "lines")
                         .attr("d", linkArc)
                         .attr("stroke", colors)
-//                            .attr("stroke", "red")
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
+
                     if (typeof lines.node() != "undefined") {
                         totalLength = totalLength > 0 ? totalLength : lines.node().getTotalLength();
                     }
@@ -94,8 +107,26 @@ var AnimationHandler = (function() {
                         .transition()
                         .duration(duration)
                         .ease("linear")
-                        .attr("stroke-dashoffset", -(totalLength * 2))
+//                        .attr("stroke-dashoffset", -(totalLength * 2))
+                        .attr("stroke-dashoffset", (totalLength * 2))
                         .remove();
+
+                    // draw lines
+                    $('.dest_circles').remove();
+
+                    var dest_circles = line_svg
+                        .selectAll("circle")
+                        .data(AnimationHandler.obj_to_hash(dest_hash))
+                        .enter()
+                        .append("svg:circle")
+                        .transition()
+                        .duration(duration)
+                        .attr("cx", function(d) { return d.coords[0]; })
+                        .attr("cy", function(d) { return d.coords[1]; })
+                        .attr("r", function(d) { return d.freq + 2 })
+                        .attr("class", "dest_circles")
+                        .attr("fill", "blue");
+                    //
                 }
 //                })
                 currentTime++;
