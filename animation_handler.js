@@ -102,13 +102,13 @@ var AnimationHandler = (function() {
                         totalLength = totalLength > 0 ? totalLength : lines.node().getTotalLength();
                     }
 //                    var totalLength = lines.length;
-                    lines.attr("stroke-dasharray", totalLength *2 + " " + totalLength * 2)
+                    lines.attr("stroke-dasharray", totalLength *2 + " " + totalLength * 4)
                         .attr("stroke-dashoffset", totalLength*2)
                         .transition()
                         .duration(duration)
                         .ease("linear")
 //                        .attr("stroke-dashoffset", -(totalLength * 2))
-                        .attr("stroke-dashoffset", (totalLength * 2))
+                        .attr("stroke-dashoffset", (totalLength * 1))
                         .remove();
 
                     // draw lines
