@@ -43,7 +43,7 @@ html, body, #map_main {
 .layer {
     position: relative;
 }
-.af_map, .af_map_lines, .af_map_sub {
+.af_map, .af_map_lines, .af_map_sub, .af_map_migration_lines {
     position: absolute;
     top: -4000px;
     left: -4000px;
@@ -284,13 +284,13 @@ html, body, #map_main {
 #map_1 {
     top: 0;
     z-index: 10;
-    height: 65%;
+    height: 100%;
     border-top: 2px solid #000000;
 }
 #map_2 {
     position: absolute;
     top: 65%;
-    height: 35%;
+    height: 0%;
     background-color: #FFFFFA;
 }
 #left_pane {

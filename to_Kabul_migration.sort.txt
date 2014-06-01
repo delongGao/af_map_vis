@@ -1,0 +1,37 @@
+Badakhshan|Kabul|1433
+Badghis|Kabul|186
+Baghlan|Kabul|2163
+Balkh|Kabul|3460
+Bamiyan|Kabul|760
+Daykundi|Kabul|48
+Farah|Kabul|326
+Faryab|Kabul|776
+Federally Administered Tribal Areas|Kabul|71
+Ghazni|Kabul|4613
+Ghor|Kabul|621
+Gorno-Badakhshan Autonomous Province|Kabul|95
+Helmand|Kabul|1137
+Herat|Kabul|2674
+Jowzjan|Kabul|1421
+Kandahar|Kabul|1688
+Kapisa|Kabul|839
+Khatlon|Kabul|52
+Khost|Kabul|1272
+Kunar|Kabul|448
+Kunduz|Kabul|2656
+Laghman|Kabul|1334
+Logar|Kabul|1462
+Nangarhar|Kabul|5153
+Nimruz|Kabul|482
+Nurestan|Kabul|30
+Oruzgan|Kabul|357
+Paktia|Kabul|2505
+Paktika|Kabul|424
+Panjshir|Kabul|307
+Parvan|Kabul|6670
+Samangan|Kabul|423
+Sare Pol|Kabul|178
+Sistan Va Baluchestan|Kabul|7
+Surkhandarya Province|Kabul|312
+Takhar|Kabul|1144
+Wardak|Kabul|3618

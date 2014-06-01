@@ -81,13 +81,16 @@ d3.json("af_map.json", function(data) {
                     },150);
 
                     // high-light sub-map
-                    var cur_province = d.properties.Prov34Na
+                    var cur_province = d.properties.Prov34Na.split(" ").join("_")
                     d3.select(".af_map_sub path.selected").attr("class","");
                     d3.select("#map_sub_" + cur_province).attr("class","selected");
                     $("#tb_1 h1").html("").text(cur_province);
                 },450);
                 // slide the map to left
                 map.panTo(new google.maps.LatLng(result[0], result[1]));
+
+                // migration
+                MigrationAnimation.init(map);
             }
 
             // create sub map
