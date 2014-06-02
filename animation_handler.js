@@ -6,9 +6,12 @@ var AnimationHandler = (function() {
             var url = "data_new.json";
             var url_more = "data_more.json";
             var url_remote = "http://128.95.157.71/py/hello.py";
+            var url_even_more = "data_even_more.json";
+            var url_balkh = "data_balkh.json";
 //            console.log(map_obj);
 //            $.getJSON(url, function(data) {
-            d3.json(url_more, function(data) {
+            d3.json(url_balkh, function(data) {
+//            d3.json(url_even_more, function(data) {
 //            d3.json(url_remote, function(data) {
 //                data = JSON.parse(data);
 //            d3.json(url, function(data) {
@@ -32,8 +35,8 @@ var AnimationHandler = (function() {
                 }
 
                 $('#play_trigger').click(function() {
-                    var st_date = 120104;
-                    var ed_date = 120114;
+                    var st_date = 120101;
+                    var ed_date = 120131;
                     var interval = 1900;
                     AnimationHandler.update(data,st_date,ed_date,lineOverlay, interval, line_svg);
                 })
@@ -94,7 +97,7 @@ var AnimationHandler = (function() {
                         .append("path")
                         .attr("class", "lines")
                         .attr("d", linkArc)
-                        .attr("stroke", colors)
+                        .attr("stroke", d3.rgb("#277a70"))
                         .attr("stroke-width", 1)
                         .attr("fill", "none");
 
@@ -113,6 +116,13 @@ var AnimationHandler = (function() {
 
                     // draw lines
                     $('.dest_circles').remove();
+                    // manipulate data
+                    var freq_arr = AnimationHandler.obj_to_hash(dest_hash).map(function(item) { return item.freq });
+                    var minDataPoint = d3.min(freq_arr);
+                    var maxDataPoint = d3.max(freq_arr);
+                    var linearScale = d3.scale.linear()
+                        .domain([minDataPoint,maxDataPoint])
+                        .range([1,10]);
 
                     var dest_circles = line_svg
                         .selectAll("circle")
@@ -123,7 +133,7 @@ var AnimationHandler = (function() {
                         .duration(duration)
                         .attr("cx", function(d) { return d.coords[0]; })
                         .attr("cy", function(d) { return d.coords[1]; })
-                        .attr("r", function(d) { return d.freq + 2 })
+                        .attr("r", function(d) { return linearScale(d.freq); })
                         .attr("class", "dest_circles")
                         .attr("fill", "blue");
                     //

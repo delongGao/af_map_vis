@@ -19,9 +19,16 @@ class Parser
 
       tem_hash = {}
       # user = tem_arr[0]
-      date = tem_arr[1]
-      srcLoc = tem_arr[2]
-      destLoc = tem_arr[3]
+      # with user
+      if tem_arr.size == 4
+        date = tem_arr[1]
+        srcLoc = tem_arr[2]
+        destLoc = tem_arr[3]
+      else # without user column
+        date = tem_arr[0]
+        srcLoc = tem_arr[1]
+        destLoc = tem_arr[2]
+      end
 
       # puts date, srcLoc, destLoc
 
@@ -56,5 +63,19 @@ class Parser
 
     # puts "original length: #{user_or.uniq.size}: shortened length: #{user_sh.uniq.size}"
     puts tem.inspect
+  end
+
+  def self.parse_mig(input, output)
+    result = {}
+    File.open(input).each do |line|
+      arr = line.split("|")
+      hash = {}
+      if arr[0] == "Kabul"
+        src = arr[1]
+        dest = arr[0]
+        freq = arr[2]
+        tip_out = "Migration out:#{arr[2]}"
+      end
+    end
   end
 end
