@@ -356,6 +356,9 @@ html, body, #map_main {
 #mid_pane #content li {
     cursor: pointer;
 }
+#showcall {
+    cursor: pointer;
+}
 
 .hover_wrapper {
     position: absolute;
@@ -392,14 +395,14 @@ html, body, #map_main {
     /*position: absolute;*/
 }
 #tb_1 {
-    height: 45%;
+    height: 40%;
     text-align: center;
 }
 #tb_2 {
     height: 30%;
 }
 #tb_3 {
-    height: 25%;
+    height: 30%;
 }
 .dest_circles {
     opacity: 0.4;
@@ -421,4 +424,7 @@ html, body, #map_main {
     fill:#04090c;
     stroke-width: 3;
     stroke:#db3646;
+}
+.call_line {
+    fill:none;
 }

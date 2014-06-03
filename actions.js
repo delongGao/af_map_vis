@@ -322,4 +322,9 @@ $(function() {
     })
     $('#mid_pane #mid_control i.fa-angle-double-left').click(function() { MidPane.move_left(); });
     $('#mid_pane #mid_control i.fa-angle-double-right').click(function() { MidPane.move_right(); });
+    $('#showcall').click(function() {
+        MidPane.move_left();
+        $("#tb_3").empty();
+        DynamicLine.init();
+    })
 });
