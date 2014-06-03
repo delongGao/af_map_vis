@@ -319,19 +319,41 @@ html, body, #map_main {
     background-color: #808080;
 }
 
+#mid_pane #mid_control {
+    margin: 25px 4px 40px;
+    position: relative;
+    font-size: 1.8em;
+    height: 30px;
+}
+#mid_pane #mid_control i, #mid_pane #mid_control img {
+    position: absolute;
+    cursor: pointer;
+}
+#mid_pane #mid_control i.fa-angle-double-left {
+    left: 10px;
+    top: 5px;
+}
+#mid_pane #mid_control i.fa-angle-double-right {
+    right: 10px;
+    top: 5px;
+}
+#mid_pane #mid_control img {
+    left: 44%;
+    width: 40px;
+}
 #mid_pane #expend {
     text-align: center;
     display: none;
     z-index: 200;
-    line-height: 33;
+    line-height: 48;
     cursor: pointer;
     font-size: 1.2em;
 }
-#mid_pane #collapse {
-    margin: 21px;
+#mid_pane #content {
+    margin:4px 30px;
+    font-size: 1.3em;
 }
-#mid_pane #collapse img {
-    width: 70px;
+#mid_pane #content li {
     cursor: pointer;
 }
 
@@ -384,9 +406,19 @@ html, body, #map_main {
 }
 
 /* mig_vis */
+.mig_vis_group {
+    position: relative;
+}
 .mig_dest_circle {
     opacity: .7;
     fill:#04090c;
     stroke-width: 3;
     stroke:#69a8cd;
+    cursor: pointer;
+}
+.selected_circle {
+    opacity: 1;
+    fill:#04090c;
+    stroke-width: 3;
+    stroke:#db3646;
 }

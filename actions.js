@@ -169,19 +169,62 @@ var MidPane = (function() {
         collapse: function() {
             $('#mid_pane').animate({
                 left:"54%",
-                width:"30px"
+                width:"25px",
+                opacity:1
             }, function() {
                 $('#mid_pane #expend').css("display","block");
+                $("#mid_control").css("display","none");
                 $('#intro').css("z-index",-1);
             })
 
         },
         expend: function() {
             $('#mid_pane #expend').css("display","none");
+            $("#mid_control").css("display","block");
             $('#intro').css("z-index",1);
             $('#mid_pane').animate({
                 left:"43%",
-                width:"24%"
+                width:"24%",
+                opacity:1
+            })
+        },
+        move_left: function() {
+            $('#mid_pane').animate({
+                left:"32%",
+                width:"24%",
+                opacity:0.85
+            })
+        },
+        move_right: function() {
+            $('#mid_pane').animate({
+                left:"54%",
+                width:"24%",
+                opacity:0.85
+            })
+        }
+    }
+}());
+
+var MigContent = (function() {
+    return {
+        init: function(data) {
+            $("#mid_pane #intro").animate({
+                left:"-100%",
+                width:"0px"
+            }).css("display","none");
+            $("#mid_pane #content h2")
+                .empty()
+                .html(
+                    data.properties.Prov34Na
+                );
+            $("#mid_pane #content").css({
+                display:"block"
+            });
+            // migration
+            $("#mid_pane #content li").click(function() {
+                var cur_month = $(this).html();
+                // migration
+                MigrationAnimation.init(map);
             })
         }
     }
@@ -274,7 +317,9 @@ $(function() {
     $('#mid_pane #expend').click(function() {
         MidPane.expend();
     })
-    $('#mid_pane #collapse img').click(function() {
+    $('#mid_pane #mid_control img').click(function() {
         MidPane.collapse();
     })
+    $('#mid_pane #mid_control i.fa-angle-double-left').click(function() { MidPane.move_left(); });
+    $('#mid_pane #mid_control i.fa-angle-double-right').click(function() { MidPane.move_right(); });
 });

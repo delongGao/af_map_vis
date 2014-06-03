@@ -67,7 +67,7 @@ d3.json("af_map.json", function(data) {
                 d3.select(this)
                     .attr("class", "selected");
                 // collapse the mid pane
-                MidPane.collapse();
+                MidPane.move_right();
 
                 setTimeout(function() {
                     // attach sub map
@@ -89,8 +89,11 @@ d3.json("af_map.json", function(data) {
                 // slide the map to left
                 map.panTo(new google.maps.LatLng(result[0], result[1]));
 
+                // show title and months
+                MigContent.init(d);
+
                 // migration
-                MigrationAnimation.init(map);
+//                MigrationAnimation.init(map);
             }
 
             // create sub map
