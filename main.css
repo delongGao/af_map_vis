@@ -371,6 +371,7 @@ html, body, #map_main {
 .lab_content ul {
     padding: 0;
     list-style: none;
+    margin: 0;
 }
 .mid_actions {
     display: inline-block;

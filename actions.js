@@ -254,6 +254,7 @@ var MigContent = (function() {
                 $('.af_map_migration_lines').remove();
                 d3.select("path.selected")
                     .attr("class", "");
+                MapAction.reset();
                 MidPane.expend();
             }).css("display","none");
         }

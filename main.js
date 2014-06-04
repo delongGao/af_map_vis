@@ -146,3 +146,21 @@ d3.json("af_map.json", function(data) {
     overlay.setMap(map);
 //    overlay.setMap(map_sub);
 })
+
+var MapAction = (function() {
+
+    return {
+        reset: function() {
+            map_sub = null;
+//            $('#map_sub').remove();
+//            $('#map_2').append("<div id='map_sub'></div>");
+            map.panTo(new google.maps.LatLng(34.5333 - 0.6, 69.1667 - 1.4));
+            map.setZoom(6);
+            $('#map_sub').empty().append(
+                "<div>" +
+                    "<div><img src='map-icon.png'></div>" +
+                    "<h3>This is some placeholder: Empty pane, please select a province first!</h3>" +
+                "</div>");
+        }
+    }
+}());
