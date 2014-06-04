@@ -144,20 +144,15 @@ html, body, #map_main {
 /* customize menu */
 /* drop-down */
 .cus_drop_down {
-    width: 80%;
+    width: 75%;
     display: block;
-    padding: 4px;
     background-color: #ffffff;
-
     /* Size and position */
     position: relative; /* Enable absolute positioning for children and pseudo elements */
-    width: 200px;
-    margin: 0 auto;
+    margin: 50px 0px;
     padding: 5px 10px;
-
     /* Styles */
     color: #000000;
-    background: #fff;
     border-left: 5px solid grey;
     cursor: pointer;
     outline: none;
@@ -175,7 +170,7 @@ html, body, #map_main {
     transition: all 0.3s ease-out;
     list-style: none;
     color: #000000;
-    height: 120px;
+    height: 140px;
     overflow-y: scroll;
 
     /* Hiding */
@@ -183,7 +178,7 @@ html, body, #map_main {
 }
 .cus_drop_down .arrow {
     position: absolute;
-    left: 175px;
+    right: 10px;
 }
 .dropdown li {
     cursor: pointer;
@@ -353,8 +348,40 @@ html, body, #map_main {
     margin:4px 30px;
     font-size: 1.3em;
 }
-#mid_pane #content li {
+/*#mid_pane #content li:hover {*/
+    /*font-size: 0.9em;*/
+    /*color: #000000;*/
+    /*background-color: #ffffff;*/
+/*}*/
+#mid_pane #content h3 span {
+    color: #333333;
+    background-color: #ffffff;
+    padding: 3px 6px;
+    border-left: 5px solid grey;
+}
+
+/* mid-pane labs */
+.labs {
+    margin: 20px 0px;
+    background-color: rgba(255,255,255,1);
+    border-left: 5px solid grey;
+    color: black;
+    padding: 8px;
+}
+.lab_content ul {
+    padding: 0;
+    list-style: none;
+}
+.mid_actions {
+    display: inline-block;
     cursor: pointer;
+    width: 32%;
+    padding: 5px 10px;
+    text-align: center;
+}
+.mid_actions:hover {
+    color: #ffffff;
+    background-color: rgba(77, 73, 73, 0.7);
 }
 #showcall {
     cursor: pointer;

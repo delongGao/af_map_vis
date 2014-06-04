@@ -23,6 +23,14 @@ var MigrationAnimation = (function() {
 
             // Add the container when the overlay is added to the map.
             migrationOverlay.onAdd = function() {
+                // tips
+                var mig_tip = d3.tip()
+                    .attr('class', 'd3-tip')
+                    .offset([-5, 0])
+                    .html(function(d) {
+                        return "<p></p>" + d[4] + "</p><p>" + d[3] + "</p>";
+                    })
+
                 // arch function
                 var linkArc = function(d) {
                     var dx = d[1][0] - d[0][0],
@@ -30,10 +38,6 @@ var MigrationAnimation = (function() {
                         dr = Math.sqrt(dx * dx + dy * dy);
                     return "M" + d[0][0] + "," + d[0][1] + "A" + dr + "," + dr + " 0 0,1 " + d[1][0] + "," + d[1][1];
                 }
-//                var line_function = d3.svg.line()
-//                                          .x(function(d) { return d.x; })
-//                                          .y(function(d) { return d.y; })
-//                                          .interpolate("linear");
 
                 // data manipulation
                 var mig_input = [];
@@ -57,6 +61,9 @@ var MigrationAnimation = (function() {
                 console.log(mig_input);
 
                 var layer = d3.select(this.getPanes().overlayMouseTarget).attr("class", "migration_layer");
+
+                // remove previous layers
+                $('.af_map_migration_lines').remove();
                 var line_svg = layer.append("svg")
                     .attr("class", "af_map_migration_lines");
                 migrationOverlay.draw = function() {
@@ -74,6 +81,10 @@ var MigrationAnimation = (function() {
                         .attr("stroke", "white")
                         .attr("stroke-width", function(d) { return parseInt(d[2]); })
                         .attr("fill", "none");
+
+                    // tip test
+                    mig_vis_group.call(mig_tip);
+
                     mig_vis_group
                         .selectAll("circle")
                         .data(mig_input)
@@ -86,8 +97,10 @@ var MigrationAnimation = (function() {
                         .on("click", function(d) {
                             $(".selected_circle").attr("class","mig_dest_circle");
                             d3.select(this).attr("class","selected_circle mig_dest_circle");
-//                            MigrationAnimation.action_box(d);
-                        });
+                            MigrationAnimation.action_box(d);
+                        })
+                        .on("mouseover", mig_tip.show)
+                        .on("mouseout", mig_tip.hide);
                 }
 //
 //                $('#play_trigger').click(function() {
@@ -101,7 +114,7 @@ var MigrationAnimation = (function() {
             migrationOverlay.setMap(map);
         },
         action_box: function(data) {
-            MigContent.init(data);
+            MigContent.show_mig_info(data);
         },
         auto_play: function() {
 

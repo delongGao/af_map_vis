@@ -192,14 +192,14 @@ var MidPane = (function() {
             $('#mid_pane').animate({
                 left:"32%",
                 width:"24%",
-                opacity:0.85
+                opacity:0.95
             })
         },
         move_right: function() {
             $('#mid_pane').animate({
                 left:"54%",
                 width:"24%",
-                opacity:0.85
+                opacity:0.95
             })
         }
     }
@@ -208,24 +208,54 @@ var MidPane = (function() {
 var MigContent = (function() {
     return {
         init: function(data) {
-            $("#mid_pane #intro").animate({
-                left:"-100%",
-                width:"0px"
-            }).css("display","none");
-            $("#mid_pane #content h2")
+            $("#mid_pane #content").animate({
+                left:"0",
+                width:"85%"
+            }, function() {
+                $("#mid_pane #intro").animate({
+                    left:"-100%",
+                    width:"0px"
+                }).css("display","none");
+            }).css("display","block");
+            $("#mid_pane #content>h3")
                 .empty()
                 .html(
-                    data.properties.Prov34Na
+                    "<span>To:</span> " + data.properties.Prov34Na
                 );
             $("#mid_pane #content").css({
                 display:"block"
             });
             // migration
-            $("#mid_pane #content li").click(function() {
+            $("#mid_pane #content .dropdown li").click(function() {
                 var cur_month = $(this).html();
                 // migration
+                $('.mig_vis_group').remove();
+                $('#mig_info h3, #mig_info p').empty();
                 MigrationAnimation.init(map);
             })
+        },
+        show_mig_info: function (data) {
+            $('#mig_info h3').empty().html("<span>From:</span> " + data[4].split("-")[0]);
+            $('#mig_info p').empty().html(data[3]);
+            if ($("li.mid_actions").length != 3) {
+                $('.lab_content ul').append("<li class='mid_actions' id='showmovement'><i class='fa fa-exchange'></i></li>");
+                $('.lab_content ul').append("<li class='mid_actions' id='showcall'><i class='fa fa-bar-chart-o'></i></li>");
+            }
+        },
+        reset: function() {
+            $('#mid_pane #content').animate({
+                left:"-100%",
+                width:"0px"
+            }, function() {
+                $("#mid_pane #intro").animate({
+                    left:"0",
+                    width:"100%"
+                }).css("display","block");
+                $('.af_map_migration_lines').remove();
+                d3.select("path.selected")
+                    .attr("class", "");
+                MidPane.expend();
+            }).css("display","none");
         }
     }
 }());
@@ -322,9 +352,12 @@ $(function() {
     })
     $('#mid_pane #mid_control i.fa-angle-double-left').click(function() { MidPane.move_left(); });
     $('#mid_pane #mid_control i.fa-angle-double-right').click(function() { MidPane.move_right(); });
+
+    // mid_pane content actions
     $('#showcall').click(function() {
         MidPane.move_left();
         $("#tb_3").empty();
         DynamicLine.init();
     })
+    $(".lab_content li#reset").click(function() { MigContent.reset(); });
 });
