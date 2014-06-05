@@ -22,6 +22,7 @@ var DynamicLine = (function() {
             var svg = d3.select("#tb_3").append("svg")
                 .attr("width", w + m[1] + m[3])
                 .attr("height",h + m[0] + m[2])
+                .attr("class","dynamic_lines")
                 .append("g")
                 .attr("transform", "translate(" + m[3] + "," + m[0] + ")"); // translate to (20,20) so that everything starts runs with that point as origin
 
@@ -142,6 +143,9 @@ var DynamicLine = (function() {
 
                 });
             }
+        },
+        reset: function() {
+            $('.dynamic_lines').remove();
         }
     }
 }());

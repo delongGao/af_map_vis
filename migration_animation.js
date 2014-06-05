@@ -2,19 +2,26 @@ var MigrationAnimation = (function() {
 
 	return {
         init: function(map_obj) {
+            // +++++++ variables ++++++++
+            var dest_province = $("#mid_pane #content>h3").text().split(": ")[1].replace(" ","%20");
+            var month = $(".cus_drop_down .title").attr("data-month");
+            // +++++++ end of variables +++++++++
             var url = "migration.json";
             var url_more = "data_more.json";
             var url_remote = "http://128.95.157.71/py/hello.py";
+            var url_final = "http://128.95.157.71/migration/migration.py?province=" + dest_province + "&month=" + month;
+            console.log(url_final);
 //            console.log(map_obj);
 //            $.getJSON(url, function(data) {
-            d3.json(url, function(data) {
-//            d3.json(url_remote, function(data) {
+            d3.json(url_final, function(data) {
+            // d3.xhr(url_final, function(data) {
 //                data = JSON.parse(data);
-//            d3.json(url, function(data) {
-//                console.log(AnimationHandler.obj_to_hash(data));
-//                var input = AnimationHandler.obj_to_hash(data);
-                MigrationAnimation.draw(data, map_obj);
-//                console.log(data);
+                console.log(data);
+                if (MigrationAnimation.obj_to_hash(data).length == 0) {
+                    Notice.init("No data found for this combination, try something else!", "notice_warning");
+                } else {
+                    MigrationAnimation.draw(data, map_obj);
+                }
             })
         },
         draw: function(data, map) {
@@ -97,6 +104,7 @@ var MigrationAnimation = (function() {
                         .on("click", function(d) {
                             $(".selected_circle").attr("class","mig_dest_circle");
                             d3.select(this).attr("class","selected_circle mig_dest_circle");
+
                             MigrationAnimation.action_box(d);
                         })
                         .on("mouseover", mig_tip.show)

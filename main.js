@@ -66,8 +66,6 @@ d3.json("af_map.json", function(data) {
                     .attr("class", "");
                 d3.select(this)
                     .attr("class", "selected");
-                // collapse the mid pane
-                MidPane.move_right();
 
                 setTimeout(function() {
                     // attach sub map
@@ -131,12 +129,8 @@ d3.json("af_map.json", function(data) {
                     }
                 }
                 overlay_sub.setMap(map_sub);
-
-                // init hover click
-                LeftPane.hover();
-                LeftPane.click();
                 // test
-                AnimationHandler.init(map_sub);
+//                AnimationHandler.init(map_sub);
                 return map_sub;
             }
         }

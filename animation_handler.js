@@ -2,7 +2,7 @@ var AnimationHandler = (function() {
     "use strict";
 
     return {
-        init: function(map_obj) {
+        init: function(map_obj, dest, src, month) {
             var url = "data_new.json";
             var url_more = "data_more.json";
             var url_remote = "http://128.95.157.71/py/hello.py";

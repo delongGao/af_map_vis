@@ -69,6 +69,12 @@ html, body, #map_main {
     stroke: #731212;
     stroke-width: 3px;
 }
+.af_map_sub path.selected_dest {
+    fill: #FAFAFA;
+    opacity: 0.5;
+    stroke: #1279b5;
+    stroke-width: 3px;
+}
 
 /* d3 tooltip styles */
 .d3-tip {
@@ -144,7 +150,7 @@ html, body, #map_main {
 /* customize menu */
 /* drop-down */
 .cus_drop_down {
-    width: 75%;
+    width: 100%;
     display: block;
     background-color: #ffffff;
     /* Size and position */
@@ -347,6 +353,7 @@ html, body, #map_main {
 #mid_pane #content {
     margin:4px 30px;
     font-size: 1.3em;
+    position: relative;
 }
 /*#mid_pane #content li:hover {*/
     /*font-size: 0.9em;*/
@@ -372,6 +379,24 @@ html, body, #map_main {
     padding: 0;
     list-style: none;
     margin: 0;
+}
+.labs_info {
+    border-left: 0;
+    border-top: 5px solid grey;
+    height: 50%;
+    position: absolute;
+    width: 100%;
+}
+.lab_title {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #891616;
+    font-size: 1.2em;
+}
+#lab_move {
+    left: -100%;
+}
+#lab_call {
+    left: 100%;
 }
 .mid_actions {
     display: inline-block;
@@ -455,4 +480,30 @@ html, body, #map_main {
 }
 .call_line {
     fill:none;
+}
+
+/* notice styles */
+#noticeInfo {
+    text-align: center;
+    position: fixed;
+    top: -3px;
+    left: 0px;
+    z-index: 10000;
+    width: 100%;
+    opacity: 0.8;
+}
+#noticeInfo p {
+    padding: 5px;
+    border-up-left-radius: 3px;
+    border-up-right-radius: 3px;
+    text-align: center;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 10px auto 5px;
+}
+.notice_success p {
+    background-color: #808080;
+}
+.notice_warning p {
+    background-color: #891616;
 }

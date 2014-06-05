@@ -50,9 +50,14 @@ var DropDown = (function() {
             DropDown.hide();
             cur_li.click(function() {
                 $('.cus_drop_down').find("span.title").empty().html($(this).html());
+                $('.cus_drop_down').find("span.title").attr("data-month",$(this).attr("value"));
                 drop_content.find("li.selected").removeClass("selected");
                 $(this).addClass("selected");
             })
+        },
+        reset: function() {
+            $('.cus_drop_down .title').empty().html("Please select month");
+            $('.cus_drop_down').find('.dropdown').find("li.selected").removeClass("selected");
         }
     }
 }());
@@ -238,8 +243,52 @@ var MigContent = (function() {
             $('#mig_info h3').empty().html("<span>From:</span> " + data[4].split("-")[0]);
             $('#mig_info p').empty().html(data[3]);
             if ($("li.mid_actions").length != 3) {
-                $('.lab_content ul').append("<li class='mid_actions' id='showmovement'><i class='fa fa-exchange'></i></li>");
-                $('.lab_content ul').append("<li class='mid_actions' id='showcall'><i class='fa fa-bar-chart-o'></i></li>");
+                $('.lab_content ul').prepend("<li class='mid_actions' id='showmovement' data-toggle='tooltip' title='Show Movement Graph'><i class='fa fa-exchange'></i></li>");
+                $('.lab_content ul').append("<li class='mid_actions' id='showcall' data-toggle='tooltip' title='Show Call Activity Graph'><i class='fa fa-bar-chart-o'></i></li>");
+                $('.mid_actions').tooltip();
+                // add leftpane action
+                $(".lab_content li#showmovement").click(function() {
+                    MidPane.move_right();
+                    // init hover click
+                    if (leftpane.status == "non-initiated") {
+                        leftpane.status = "initiated";
+                        leftpane.cover();
+                        leftpane.click();
+                    };
+                    $("#lab_call").css("display","none");
+                    $("#lab_move")
+                        .css("display","block")
+                        .animate({
+                            "left":"0",
+                            "opacity":0.85
+                        });
+                    var dest_province = $("#mid_pane #content>h3").text().split(": ")[1].replace(" ","%20");
+                    var month = $(".cus_drop_down .title").attr("data-month");
+                    var src_province = $("#mid_pane #content #mig_info > h3").text().split(": ")[1].replace(/\s$/,"");
+
+                    var adjusted_coords = [
+                        (ProvinceDict[dest_province][0]+ ProvinceDict[src_province][0])/2,
+                        (ProvinceDict[dest_province][1]+ ProvinceDict[src_province][1])/2
+                    ];
+
+                    map_sub.panTo(new google.maps.LatLng(adjusted_coords[1], adjusted_coords[0]));
+                    d3.select(".af_map_sub path.selected_dest").attr("class","");
+                    d3.select("#map_sub_" + src_province.split(" ").join("_")).attr("class","selected_dest");
+                    AnimationHandler.init(map_sub, dest_province, src_province, month);
+                });
+                // mid_pane content actions
+                $('.lab_content li#showcall').click(function() {
+                    MidPane.move_left();
+                    $("#tb_3").empty();
+                    DynamicLine.init();
+                    $("#lab_move").css("display","none");
+                    $("#lab_call")
+                        .css("display","block")
+                            .animate({
+                            "left":"0",
+                            "opacity":0.85
+                        });
+                })
             }
         },
         reset: function() {
@@ -252,58 +301,96 @@ var MigContent = (function() {
                     width:"100%"
                 }).css("display","block");
                 $('.af_map_migration_lines').remove();
+                // remove other actions except for reset
+                $('li#showcall').remove();
+                $('li#showmovement').remove();
                 d3.select("path.selected")
                     .attr("class", "");
                 MapAction.reset();
                 MidPane.expend();
             }).css("display","none");
+            $('#mig_info h3').empty();
+            $('#mig_info p').empty();
+            // reset dynamic lines
+            DynamicLine.reset();
+            // reset dropdown
+            DropDown.reset();
+            $(".labs_info").css("display","none");
         }
     }
 }());
 
-var LeftPane = (function() {
+function LeftPane() {
+    this.status = "non-initiated";
+}
+LeftPane.prototype.cover = function() {
+    $('.map_pane').find('.hover_wrapper').css({
+        display:"block"
+    });
+    $('#abs_control').css("display","block");
+//    $('.map_pane').mouseout(function() {
+//        $(this).find('.hover_wrapper').css({
+//            display:"none"
+//        });
+//        $('#abs_control').css("display","none");
+//    })
+};
+LeftPane.prototype.click = function() {
+    $('.hover_wrapper').click(function() {
+        var ensmall = $(this).find('.ensmall');
+        var enlarge = $(this).find('.enlarge');
+        // state: small
+        if (ensmall.css("display") == "none") {
+            ensmall.css("display", "inline");
+            enlarge.css("display", "none");
+            $('#map_2').animate({
+                top:'35%',
+                height:'65%'
+            },600);
+        }
+        // state: large
+        else {
+            ensmall.css("display", "none");
+            enlarge.css("display", "inline");
+            $('#map_2').animate({
+                top:'65%',
+                height:'35%'
+            },600);
+        }
+    })
+};
+LeftPane.prototype.clear = function() {
+    $('.map_pane').mouseover(function() { return false; });
+    $('.map_pane').mouseout(function() { return false; });
+    $('.hover_wrapper').click(function() { return false; });
+};
+var leftpane = new LeftPane();
+
+
+var Notice = (function() {
 
     return {
-        hover:function() {
-            $('.map_pane').mouseover(function() {
-                $(this).find('.hover_wrapper').css({
-                    display:"block"
-                });
-                $('#abs_control').css("display","block");
-            })
-            $('.map_pane').mouseout(function() {
-                $(this).find('.hover_wrapper').css({
-                    display:"none"
-                });
-                $('#abs_control').css("display","none");
+        init: function(msg, type) {
+            var noticeContainer = $("#noticeInfo");
+            noticeContainer.removeClass().addClass(type); // type should be notice_success or notice_warning
+            noticeContainer.empty().append("<p>" + msg + "</p>");
+            Notice.fade();
+            noticeContainer.click(function() {
+                $(this).find("p").remove();
             })
         },
-        click: function() {
-            $('.hover_wrapper').click(function() {
-                var ensmall = $(this).find('.ensmall');
-                var enlarge = $(this).find('.enlarge');
-                // state: small
-                if (ensmall.css("display") == "none") {
-                    ensmall.css("display", "inline");
-                    enlarge.css("display", "none");
-                    $('#map_2').animate({
-                        top:'35%',
-                        height:'65%'
-                    },600);
-                }
-                // state: large
-                else {
-                    ensmall.css("display", "none");
-                    enlarge.css("display", "inline");
-                    $('#map_2').animate({
-                        top:'65%',
-                        height:'35%'
-                    },600);
-                }
-            })
+        fade: function() {
+            var noticeContainer = $("#noticeInfo");
+            setTimeout(function() { noticeContainer.find("p").animate(
+                    {
+                        "opacity":0,
+                        "zIndex":0
+                    }
+                    , function() { $(this).remove(); }); },3000
+            );
         }
     }
-}());
+})();
 
 // main function
 $(function() {
@@ -354,11 +441,11 @@ $(function() {
     $('#mid_pane #mid_control i.fa-angle-double-left').click(function() { MidPane.move_left(); });
     $('#mid_pane #mid_control i.fa-angle-double-right').click(function() { MidPane.move_right(); });
 
-    // mid_pane content actions
-    $('#showcall').click(function() {
-        MidPane.move_left();
-        $("#tb_3").empty();
-        DynamicLine.init();
-    })
-    $(".lab_content li#reset").click(function() { MigContent.reset(); });
+    $(".lab_content li#reset").click(function() {
+        MigContent.reset();
+        $("li#showmovement").css("display","none");
+        $("li#showcall").css("display","none");
+    });
+    // init tooltips
+    $('.mid_actions').tooltip();
 });
